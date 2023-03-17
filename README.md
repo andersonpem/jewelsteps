@@ -36,6 +36,8 @@ Other basic business logic rules
 
 * Run the command **docker compose up** or **docker-compose up** (depending on your system's configuration)
 
+* Wait some seconds while the initialization commands run (It will install all the composer dependencies, create the database and populate the categories)
+
 * The api is ready to roll on your local machine at port 8080
 
 ### The main endpoint
