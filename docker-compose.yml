@@ -1,0 +1,50 @@
+version: "3.6"
+services:
+    php-apache:
+        image: registry.gitlab.com/andersonpem/apache-php-zsh:8.0
+        restart: always
+        extra_hosts:
+            - host.docker.internal:host-gateway
+        volumes:
+            - ./src:/var/www/html
+        ports:
+            - 8080:80
+
+        environment:
+            # Startup commands
+            STARTUP_COMMAND_1: composer install
+            STARTUP_COMMAND_2: php bin/console doctrine:database:drop --force 
+            STARTUP_COMMAND_3: php bin/console d:database:create 
+            STARTUP_COMMAND_4: php bin/console d:migrations:migrate -n  
+            STARTUP_COMMAND_5: php bin/console doctrine:fixtures:load -n  
+            
+            #General settings
+            #Ext enable
+            PHP_EXTENSIONS: ${PHP_EXTENSIONS}
+            TZ: ${TZ}
+            TEMPLATE_PHP_INI: ${TEMPLATE_PHP_INI}
+
+            #PHP.ini settings
+            PHP_INI_UPLOAD_MAX_FILESIZE: ${PHP_INI_UPLOAD_MAX_FILESIZE}
+            PHP_INI_MAX_EXECUTION_TIME: ${PHP_INI_MAX_EXECUTION_TIME}
+            PHP_INI_MEMORY_LIMIT: ${PHP_INI_MEMORY_LIMIT}
+            PHP_INI_DISPLAY_ERRORS: ${PHP_INI_DISPLAY_ERRORS}
+            PHP_INI_DATE__TIMEZONE: ${TZ}
+            PHP_INI_SHORT_OPEN_TAG: ${PHP_INI_SHORT_OPEN_TAG}
+            APACHE_DOCUMENT_ROOT: ${DOCUMENT_ROOT}
+            #Debug only
+            PHP_EXTENSION_XDEBUG: ${PHP_EXTENSION_XDEBUG}
+            PHP_INI_XDEBUG__XDEBUG_MODE: ${XDEBUG_MODE}
+            PHP_INI_XDEBUG__XDEBUG_CONNECT_TIMEOUT_MS: ${XDEBUG_CONNECT_TIMEOUT_MS}
+            PHP_INI_XDEBUG__START_WITH_REQUEST: ${XDEBUG_START_WITH_REQUEST}
+            PHP_INI_XDEBUG__CLIENT_HOST: ${XDEBUG_CLIENT_HOST}
+            PHP_INI_XDEBUG__CLIENT_PORT: ${PHP_INI_XDEBUG__CLIENT_PORT}
+            PHP_INI_XDEBUG__REMOTE_HANDLER: "dbgp"
+            PHP_INI_XDEBUG__IDEKEY: ${PHP_INI_XDEBUG__IDEKEY}
+            # PHP_INI_XDEBUG__REMOTE_LOG: "xdebug.log"
+            PHP_INI_ERROR_REPORTING: ${PHP_INI_ERROR_REPORTING}
+            #Production Settings
+            # TEMPLATE_PHP_INI: production
+            DOCKER_USER: ${DOCKER_USER}
+            APACHE_RUN_USER: ${APACHE_RUN_USER}
+            APACHE_RUN_GROUP: ${APACHE_RUN_GROUP}
